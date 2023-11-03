@@ -1,0 +1,29 @@
+extends ../layout/index
+
+block contenido
+    div.py-10
+        h1.text-4xl.my-10.font-extrabold.text-center Bienes
+            span.font-normal Raices
+        p(class="text-center text-2xl font-extrabold")= pagina
+        
+        div.mt-8.mx-auto.max-w-md
+            div.bg-white.py-8.px-4.shadow.rounded-lg
+                form.space-y-5
+                    div
+                        label.block.text-sm.uppercase.text-gray-600.mb-3.font-bold(for="nombre") Nombre
+                        input#nombre.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu Nombre" type="text" name="nombre")
+                    div
+                        label.block.text-sm.uppercase.text-gray-600.mb-3.font-bold(for="nombre") Email
+                        input#email.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Ej: random@random.com" type="email" name="email")
+                    div
+                        label.block.text-sm.uppercase.text-gray-600.mb-3.font-bold(for="password") Contraseña
+                        input#password.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Contraseña" type="password" name="password")
+                    div
+                        label.block.text-sm.uppercase.text-gray-600.mb-3.font-bold(for="repetir_password") Repetir Contraseña
+                        input#repetir_password.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Repetir Contraseña" type="password" name="repetir_password")
+                    
+                    div.flex.items-center.justify-between
+                        a.text-gray-500.text-xs(href="/auth/login") ¿Ya tienes cuenta? Inicia Sesión
+                        a.text-gray-500.text-xs(href="/auth/olvide-password") Olvide mi Contraseña 
+                    
+                    input(class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Crear Cuenta")
