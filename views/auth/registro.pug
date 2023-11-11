@@ -5,16 +5,23 @@ block contenido
         h1.text-4xl.my-10.font-extrabold.text-center Bienes
             span.font-normal Raices
         p(class="text-center text-2xl font-extrabold")= pagina
+
+
+        if errores
+            div(class="max-w-md mx-auto my-10")
+                each error in errores 
+                    p.bg-red-600.text-white.uppercase.text-sm.text-center.p-2.mb-2.font-bold.rounded-md= error.msg
         
         div.mt-8.mx-auto.max-w-md
-            div.bg-white.py-8.px-4.shadow.rounded-lg
-                form.space-y-5
+            div.bg-white.py-8.px-4.shadow-lg.rounded-lg
+                form.space-y-5(method="POST" action="/auth/registro")
+                    input(type="hidden" name="_csrf" value=csrfToken)
                     div
                         label.block.text-sm.uppercase.text-gray-600.mb-3.font-bold(for="nombre") Nombre
-                        input#nombre.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu Nombre" type="text" name="nombre")
+                        input#nombre.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Tu Nombre" type="text" name="nombre" value= usuario ? usuario.nombre : "")
                     div
                         label.block.text-sm.uppercase.text-gray-600.mb-3.font-bold(for="nombre") Email
-                        input#email.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Ej: random@random.com" type="email" name="email")
+                        input#email.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Ej: random@random.com" type="email" name="email" value= usuario ? usuario.email : "")
                     div
                         label.block.text-sm.uppercase.text-gray-600.mb-3.font-bold(for="password") Contraseña
                         input#password.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Contraseña" type="password" name="password")
@@ -26,4 +33,4 @@ block contenido
                         a.text-gray-500.text-xs(href="/auth/login") ¿Ya tienes cuenta? Inicia Sesión
                         a.text-gray-500.text-xs(href="/auth/olvide-password") Olvide mi Contraseña 
                     
-                    input(class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Crear Cuenta")
+                    input(class="w-full bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-3 cursor-pointer rounded-full" type="submit" value="Crear Cuenta")
