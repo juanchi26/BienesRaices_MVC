@@ -1,7 +1,9 @@
 
 import { unlink } from "node:fs/promises"
 import { validationResult } from "express-validator"
-import  { Categoria, Precio, Propiedad} from  "../models/index.js"
+import { esVendedor, formatearFecha } from "../helpers/index.js"
+
+import  { Categoria, Precio, Propiedad, Mensaje, Usuario} from  "../models/index.js"
 
 const admin = async (req, res) => {
     //leer query string
@@ -32,7 +34,8 @@ const admin = async (req, res) => {
                     { usuarioId : id },
                     include:[
                         { model: Categoria, as: 'categoria' },
-                        { model: Precio, as: 'precio' }
+                        { model: Precio, as: 'precio' },
+                        { model: Mensaje}
                     ],
                 
             }),
@@ -355,6 +358,43 @@ const eliminar = async (req, res) => {
 
 }
 
+
+//MODIFICA EL ESTADO DE LA PROPIEDAD
+
+const cambiarEstado = async (req, res) => {
+
+    const { id } = req.params
+
+    //validar que la propiedad exista
+
+    const propiedad = await Propiedad.findByPk(id)
+
+
+    if(!propiedad){
+        return res.redirect("/mis-propiedades")
+    
+    }
+
+    //revisar que el usuario sea el dueño de la propiedad
+
+    if(propiedad.usuarioId.toString() !== req.usuario.id.toString()){
+        return res.redirect("/mis-propiedades")
+    }
+
+
+    //actualizar estado
+
+    propiedad.publicado = !propiedad.publicado
+
+    await propiedad.save()
+
+    res.json({
+        resultado: true
+    })
+
+}
+
+
 //Muestra una propiedad
 
 const mostrarPropiedad = async (req, res) => {
@@ -369,17 +409,116 @@ const mostrarPropiedad = async (req, res) => {
             {model: Categoria, as: "categoria"}]
     })
 
-    if(!propiedad){
+    if(!propiedad || !propiedad.publicado){
         return res.redirect("/404")
     
     }
 
+    
 
     res.render("propiedades/mostrar", {
         pagina: propiedad.titulo,
         propiedad,
+        csrfToken: req.csrfToken(),
+        usuario: req.usuario,
+        esVendedor: esVendedor(req.usuario?.id, propiedad.usuarioId)
     })
 }
+
+
+const enviarMensaje = async (req, res) => {
+    const { id } = req.params
+
+    //comprobar que la propiedad exista
+
+    const propiedad = await Propiedad.findByPk(id,{
+        include: [
+            {model: Precio, as: "precio" },
+            {model: Categoria, as: "categoria"}]
+    })
+
+    if(!propiedad){
+        return res.redirect("/404")
+    
+    }
+    
+
+    //renderizar los errores
+
+    const resultado = validationResult(req)
+
+    
+
+    if(!resultado.isEmpty()){
+        return  res.render("propiedades/mostrar", {
+            pagina: propiedad.titulo,
+            propiedad,
+            csrfToken: req.csrfToken(),
+            usuario: req.usuario,
+            esVendedor: esVendedor(req.usuario?.id, propiedad.usuarioId),
+            errores: resultado.array(),
+        })
+        
+    }
+
+    //almacenar mensaje
+
+    const { mensaje } = req.body
+    const { id: propiedadId } = req.params
+    const { id: usuarioId } = req.usuario
+
+    
+    
+    await Mensaje.create({
+        mensaje,
+        propiedadId,
+        usuarioId
+    })
+
+    res.redirect("/")
+}
+
+
+
+
+//leer mensajes recibidos
+
+const leerMensajes = async (req, res) => {
+
+    const { id } = req.params
+
+    //validar que la propiedad exista
+
+    const propiedad = await Propiedad.findByPk(id,
+        {
+            include:[
+                { model: Mensaje , 
+                    include: [{model: Usuario.scope("eliminarPassword"), as: "usuario"}]}
+                
+            ]
+        }
+        )
+
+
+    if(!propiedad){
+        return res.redirect("/mis-propiedades")
+    
+    }
+
+    //revisar que el usuario sea el dueño de la propiedad
+
+    if(propiedad.usuarioId.toString() !== req.usuario.id.toString()){
+        return res.redirect("/mis-propiedades")
+    }
+
+    res.render("propiedades/mensajes", {
+        pagina: "Mensajes Recibidos",
+        mensajes: propiedad.Mensajes,
+        formatearFecha,
+
+    })
+}
+
 
 export {
     admin,
@@ -390,5 +529,9 @@ export {
     editar,
     guardarCambios,
     eliminar,
-    mostrarPropiedad
+    cambiarEstado,
+    mostrarPropiedad,
+    enviarMensaje,
+    leerMensajes,
+    
 }

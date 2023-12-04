@@ -1,6 +1,7 @@
 import express from "express";
 import { body } from "express-validator"
-import { admin, crear, guardar, agregarImagen, almacenarImagen, editar, guardarCambios, eliminar, mostrarPropiedad } from "../controllers/propiedadController.js";
+import { admin, crear, guardar, agregarImagen, almacenarImagen, editar, guardarCambios, eliminar, cambiarEstado , mostrarPropiedad, enviarMensaje, leerMensajes } from "../controllers/propiedadController.js";
+import identificarUsuario from "../middleware/identificarUsuario.js";
 import protegerRuta from "../middleware/protegerRuta.js"
 import uploads from "../middleware/subirImagen.js"
 const router = express.Router();
@@ -45,10 +46,28 @@ router.post("/propiedades/editar/:id",protegerRuta,
 
 router.post("/propiedades/eliminar/:id",protegerRuta, eliminar)
     
+router.put("/propiedades/:id",protegerRuta, cambiarEstado)
+
 
 // AREA PUBLICA
 
 router.get("/propiedad/:id",
+    identificarUsuario,
     mostrarPropiedad
 )
+
+//almacentar mensajes enviados
+router.post("/propiedad/:id",
+    identificarUsuario,
+    body("mensaje").isLength({min: 10, max: 399}).withMessage("El mensaje no puede ir vacio ni exceder los 400 caracteres")
+    ,
+    enviarMensaje
+)
+
+router.get("/mensajes/:id", protegerRuta, leerMensajes)
+
+
+
+
+
 export default router
