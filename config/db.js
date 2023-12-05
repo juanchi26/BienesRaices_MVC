@@ -6,7 +6,7 @@ dotenv.config({path:".env"});
 
 const db = new sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {      //nombre, usuario, pass
     host: process.env.DB_HOST,         // ip de la conexion (este caso, conexion local)
-    port:3307,                 // puerto de conexion
+    port: 3306,                 // puerto de conexion
     dialect: "mysql",   //base de datos a utilizar
     define:{
         timestamps: true  //cuando un usuario se registra agrega 2 columnas , una cuando fue creado y cuando fue actualizado
