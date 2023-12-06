@@ -35,7 +35,7 @@ const admin = async (req, res) => {
                     include:[
                         { model: Categoria, as: 'categoria' },
                         { model: Precio, as: 'precio' },
-                        { model: Mensaje}
+                        { model: Mensaje, as: "mensajes"}
                     ],
                 
             }),
@@ -492,7 +492,7 @@ const leerMensajes = async (req, res) => {
     const propiedad = await Propiedad.findByPk(id,
         {
             include:[
-                { model: Mensaje , 
+                { model: Mensaje , as: "mensajes" , 
                     include: [{model: Usuario.scope("eliminarPassword"), as: "usuario"}]}
                 
             ]
@@ -513,7 +513,7 @@ const leerMensajes = async (req, res) => {
 
     res.render("propiedades/mensajes", {
         pagina: "Mensajes Recibidos",
-        mensajes: propiedad.Mensajes,
+        mensajes: propiedad.mensajes,
         formatearFecha,
 
     })
