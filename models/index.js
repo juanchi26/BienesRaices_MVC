@@ -12,13 +12,13 @@ Propiedad.belongsTo(Categoria, { foreignKey: "categoriaId", as: "categoria"} );
 Propiedad.belongsTo(Usuario, { foreignKey: "usuarioId"} );
 Propiedad.hasMany(Mensaje, { foreignKey: "propiedadId", as: "mensajes"} )
 
-Mensaje.belongsTo(Propiedad, { foreignKey: "propiedadId"} )
+Mensaje.belongsTo(Propiedad, { foreignKey: "propiedadId", as: "propiedad"} )
 Mensaje.belongsTo(Usuario, { foreignKey: "usuarioId"} )
 
 export {
     Propiedad,
     Precio,
-    Categoria,
+    Categoria,  
     Usuario,
     Mensaje 
 }
