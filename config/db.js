@@ -34,7 +34,7 @@ db.query(`ALTER USER '${username}'@'${host}' WITH MAX_USER_CONNECTIONS ${newMaxC
     })
     .finally(() => {
         // Cierra la conexión a la base de datos después de ejecutar la consulta
-        sequelize.close();
+        db.close();
     });
 
 export default db;
