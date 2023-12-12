@@ -12,7 +12,7 @@ const db = new sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
         timestamps: true  //cuando un usuario se registra agrega 2 columnas , una cuando fue creado y cuando fue actualizado
     },
     pool: {        //reutiliza conexiones "vivas"
-        max:5,          //maximo de conexiones
+        max:200,          //maximo de conexiones
         min:0,
         acquire: 30000,       // 30 segundos antes de un error
         idle: 10000             //10 segundos antes de que se cierre una conexion
