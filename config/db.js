@@ -21,7 +21,11 @@ const db = new sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
 })
 
 
-db.query(`ALTER USER '${Juan}'@'${fya.h.filess.io}' WITH MAX_USER_CONNECTIONS ${10}`)
+const username = 'juanchi.diaz@hotmail.com';
+const host = 'fya.h.filess.io';
+const newMaxConnections = 10;
+
+db.query(`ALTER USER '${username}'@'${host}' WITH MAX_USER_CONNECTIONS ${newMaxConnections}`)
     .then(() => {
         console.log('Límite de conexiones ajustado con éxito.');
     })
