@@ -21,4 +21,16 @@ const db = new sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
 })
 
 
+db.query(`ALTER USER '${Juan}'@'${fya.h.filess.io}' WITH MAX_USER_CONNECTIONS ${10}`)
+    .then(() => {
+        console.log('Límite de conexiones ajustado con éxito.');
+    })
+    .catch((error) => {
+        console.error('Error al ajustar el límite de conexiones:', error);
+    })
+    .finally(() => {
+        // Cierra la conexión a la base de datos después de ejecutar la consulta
+        sequelize.close();
+    });
+
 export default db;
