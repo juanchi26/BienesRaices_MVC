@@ -20,21 +20,4 @@ const db = new sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
     operatorAliases: false  //asegurar que no se produzcan errores de sintaxis
 })
 
-
-const username = 'juanchi.diaz@hotmail.com';
-const host = 'fya.h.filess.io';
-const newMaxConnections = 10;
-
-db.query(`ALTER USER '${username}'@'${host}' WITH MAX_USER_CONNECTIONS ${newMaxConnections}`)
-    .then(() => {
-        console.log('Límite de conexiones ajustado con éxito.');
-    })
-    .catch((error) => {
-        console.error('Error al ajustar el límite de conexiones:', error);
-    })
-    .finally(() => {
-        // Cierra la conexión a la base de datos después de ejecutar la consulta
-        db.close();
-    });
-
 export default db;
