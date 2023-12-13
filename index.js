@@ -6,7 +6,7 @@ import propiedadesRoutes from "./routes/propiedadesRoutes.js"
 import appRoutes from "./routes/appRoutes.js"
 import apiRoutes from "./routes/apiRoutes.js"
 import db from "./config/db.js"
-import obtenerConexionesActivas from "./config/conections.js"
+
 
 
 //Crear la App
@@ -23,8 +23,9 @@ app.use(csrf({cookie: true}))
 
 try{
     await db.authenticate();
+    
     db.sync();
-    console.log(obtenerConexionesActivas)
+    console.log(await db.connectionManager.pool.size)
     console.log("Conexión exitosa a la base de datos")
 }catch(error){
     console.log(error)
