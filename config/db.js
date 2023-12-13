@@ -20,4 +20,7 @@ const db = new sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
     operatorAliases: false  //asegurar que no se produzcan errores de sintaxis
 })
 
+
+
+
 export default db;
