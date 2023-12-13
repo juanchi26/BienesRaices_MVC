@@ -14,6 +14,8 @@ block contenido
                 each error in errores 
                     p.bg-red-600.text-white.uppercase.text-sm.text-center.p-2.mb-2.font-bold.rounded-md= error.msg
 
+        pre=JSON.stringify(categorias, undefined, 2)
+
         div(class="bg-white shadow-lg py-8 px-4 rounded-lg max-w-4xl mx-auto my-10 md:px-10")
             form.space-y-8(method="POST" action="/propiedades/crear")
                 input(type="hidden" name="_csrf" value=csrfToken)
