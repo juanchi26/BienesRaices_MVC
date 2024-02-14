@@ -45,10 +45,12 @@ const admin = async (req, res) => {
         ])
 
         
+        const user = req.cookies.user
 
         res.render("propiedades/admin", {
             pagina: "Mis Propiedades",
             propiedades,
+            user,
             csrfToken: req.csrfToken(),
             paginas: Math.ceil(total / limit),
             page: Number(page),
@@ -77,11 +79,13 @@ const crear = async(req, res) => {
         Precio.findAll()
     ])
 
+    const user = req.cookies.user
 
     res.render("propiedades/crear", {
         pagina: "Crear Propiedad",
         csrfToken: req.csrfToken(),
         precios,
+        user,
         categorias,
         datos: {}
         
@@ -93,7 +97,7 @@ const guardar = async (req, res) => {
     //validacion
     const resultado = validationResult(req)
 
-    
+    const user = req.cookies.user
 
     if(!resultado.isEmpty()){
 
@@ -106,6 +110,7 @@ const guardar = async (req, res) => {
             pagina: "Crear Propiedad",
             csrfToken: req.csrfToken(),
             precios,
+            user,
             categorias,
             errores: resultado.array(),
             datos: req.body
@@ -170,9 +175,12 @@ const agregarImagen = async (req, res) => {
         return res.redirect("/mis-propiedades")
     }
 
+    const user = req.cookies.user
+
     res.render("propiedades/agregar-imagen", {
         pagina: `Agregar Imagenes a la Propiedad: ${propiedad.titulo}`,
         propiedad,
+        user,
         csrfToken: req.csrfToken()
     })
 }
@@ -239,11 +247,13 @@ const editar = async (req, res) => {
         Precio.findAll()
     ])
 
+    const user = req.cookies.user
 
     res.render("propiedades/editar", {
         pagina: `Editar Propiedad: ${propiedad.titulo}`,
         csrfToken: req.csrfToken(),
         precios,
+        user,
         categorias,
         datos: propiedad
         
@@ -256,7 +266,7 @@ const guardarCambios = async (req, res) => {
 
     const resultado = validationResult(req)
 
-    
+    const user = req.cookies.user
 
     if(!resultado.isEmpty()){
 
@@ -269,6 +279,7 @@ const guardarCambios = async (req, res) => {
                     pagina: "Editar Propiedad",
                     csrfToken: req.csrfToken(),
                     precios,
+                    user,
                     categorias,
                     datos: req.body,
                     errores: resultado.array(),
@@ -394,6 +405,39 @@ const cambiarEstado = async (req, res) => {
 
 }
 
+//cambiando a destacado
+
+const destacar = async (req, res, next) => {
+    const { id } = req.params
+
+    //validar que la propiedad exista
+
+    const propiedad = await Propiedad.findByPk(id)
+
+
+    if(!propiedad){
+        return res.redirect("/mis-propiedades")
+    
+    }
+
+    //revisar que el usuario sea el dueño de la propiedad
+
+    if(propiedad.usuarioId.toString() !== req.usuario.id.toString()){
+        return res.redirect("/mis-propiedades")
+    }
+
+
+    //actualizar estado
+
+    propiedad.destacado = !propiedad.destacado
+
+    await propiedad.save()
+
+    res.json({
+        resultado: true
+    })
+
+}
 
 //Muestra una propiedad
 
@@ -414,11 +458,12 @@ const mostrarPropiedad = async (req, res) => {
     
     }
 
-    
+    const user = req.cookies.user    
 
     res.render("propiedades/mostrar", {
         pagina: propiedad.titulo,
         propiedad,
+        user,
         csrfToken: req.csrfToken(),
         usuario: req.usuario,
         esVendedor: esVendedor(req.usuario?.id, propiedad.usuarioId)
@@ -447,12 +492,13 @@ const enviarMensaje = async (req, res) => {
 
     const resultado = validationResult(req)
 
-    
+    const user = req.cookies.user 
 
     if(!resultado.isEmpty()){
         return  res.render("propiedades/mostrar", {
             pagina: propiedad.titulo,
             propiedad,
+            user,
             csrfToken: req.csrfToken(),
             usuario: req.usuario,
             esVendedor: esVendedor(req.usuario?.id, propiedad.usuarioId),
@@ -486,7 +532,7 @@ const enviarMensaje = async (req, res) => {
 const leerMensajes = async (req, res) => {
 
     const { id } = req.params
-
+    const user = req.cookies.user
     //validar que la propiedad exista
 
     const propiedad = await Propiedad.findByPk(id,
@@ -515,6 +561,8 @@ const leerMensajes = async (req, res) => {
         pagina: "Mensajes Recibidos",
         mensajes: propiedad.mensajes,
         formatearFecha,
+        user,
+        
 
     })
 }
@@ -530,6 +578,7 @@ export {
     guardarCambios,
     eliminar,
     cambiarEstado,
+    destacar,
     mostrarPropiedad,
     enviarMensaje,
     leerMensajes,

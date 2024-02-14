@@ -9,6 +9,7 @@ export default {
         mostrarMapa:"./src/js/mostrarMapa.js",
         mapaInicio:"./src/js/mapaInicio.js",
         cambiarEstado:"./src/js/cambiarEstado.js",
+        cambiarDestacado:"./src/js/cambiarDestacado.js"
     },
     output:{
         filename:"[name].js",

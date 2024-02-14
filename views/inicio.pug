@@ -32,17 +32,25 @@ block contenido
 
         div(id="mapa-inicio" class="h-[400px] md:h-[600px] mt-5 rounded-lg")
 
-        section(class="py-5 p-3 md:px-0")
-            h2(class="text-center text-4xl font-extrabold pt-10") Casas en Venta
-            div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
-                each propiedad in casas
-                    include ./templates/card
-                            
-        section(class="py-5 p-3 md:px-0")
-            h2(class="text-center text-4xl font-extrabold pt-10") Apartamentos en Venta
-            div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
-                each propiedad in departamentos
-                    include ./templates/card
+        if destacados.length
+            section(class="py-5 p-3 md:px-0")
+                h2(class="text-center text-4xl font-extrabold pt-10") Propiedades Destacadas
+                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
+                    each propiedad in destacados
+                        include ./templates/card
+        if casas.length
+            section(class="py-5 p-3 md:px-0")
+                h2(class="text-center text-4xl font-extrabold pt-10") Casas en Venta
+                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
+                    each propiedad in casas
+                        include ./templates/card
+
+        if departamentos.length                 
+            section(class="py-5 p-3 md:px-0")
+                h2(class="text-center text-4xl font-extrabold pt-10") Apartamentos en Venta
+                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
+                    each propiedad in departamentos
+                        include ./templates/card
 
 
 

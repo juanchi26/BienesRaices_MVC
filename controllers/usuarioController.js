@@ -66,6 +66,9 @@ const autenticar = async (req, res) => {
     console.log(token)
     //almacenar en una cookie
 
+    //almacenar usuario en cookie
+    res.cookie('user', usuario.email)
+
     return res.cookie('_token', token, {
         httpOnly: true,
         //secure: true   con certificado ssl poner en true

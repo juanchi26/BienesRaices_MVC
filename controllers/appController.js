@@ -2,8 +2,8 @@ import Sequelize from "sequelize"
 import { Precio, Categoria, Propiedad } from "../models/index.js"
 
 const inicio = async (req, res) => {
-
-    const [categorias , precios, casas, departamentos ] = await Promise.all([
+    const user = req.cookies.user
+    const [categorias , precios, casas, departamentos, destacados ] = await Promise.all([
         Categoria.findAll({
             raw:true
         }),
@@ -14,6 +14,7 @@ const inicio = async (req, res) => {
             limit: 3,
             where: {
                 categoriaId: 1,
+                publicado: 1,
             },
             include:
             {
@@ -28,6 +29,22 @@ const inicio = async (req, res) => {
             limit: 3,
             where: {
                 categoriaId: 2,
+                publicado: 1,
+            },
+            include:
+            {
+                model: Precio,
+                as: "precio"
+            },
+            order: [
+                ["createdAt", "DESC"]
+            ]
+        }),
+        Propiedad.findAll({
+            limit: 3,
+            where: {
+                destacado: 1,
+                publicado: 1,
             },
             include:
             {
@@ -46,8 +63,10 @@ const inicio = async (req, res) => {
         pagina: "Inicio",
         categorias,
         precios,
+        user,
         casas,
         departamentos,
+        destacados,
         csrfToken: req.csrfToken()
     })
 }

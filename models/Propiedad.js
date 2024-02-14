@@ -57,6 +57,11 @@ const Propiedad = db.define('propiedades', {
         allowNull: false,
         defaultValue: false
     },
+    destacado:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
 
     
 
